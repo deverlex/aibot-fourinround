@@ -45,7 +45,7 @@ public class IPoint {
         this.danger = danger;
     }
 
-    public boolean isActive() {
+    public boolean isEmpty() {
         return pointId.equals(".");
     }
 

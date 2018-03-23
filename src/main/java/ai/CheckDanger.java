@@ -8,9 +8,9 @@ import java.util.Random;
 // tien hanh danh trong so
 class CheckDanger {
 
-    private final static int L10_DANGER = 10;
-    private final static int L06_DANGER = 6;
-    private final static int L02_DANGER = 2;
+    private final static int LEVEL_DEAD = 50;
+    private final static int LEVEL_DOUBLE_STEP = 15;
+    private final static int LEVEL_MAYBE = 2;
 
     private ITables iTables;
 
@@ -37,6 +37,126 @@ class CheckDanger {
 
     /// IPoint[4][4]
     private void checkDangerInChildTable(IPoint[][] points) {
+        // [_][_][_][_]
+        // [?][?][*][*]
+        // [*][X][_][_]
+        // [*][_][_][_]
+        IPoint[] botP1 = {points[0][2], points[0][3], points[2][1], points[3][1]};
+        IPoint[] hasP1 = {points[1][2]};
+        IPoint[] empP1 = {points[0][1], points[1][1]};
+        validateDangerMulti(botP1, hasP1, empP1, points[0][1]);
+        // [_][_][_][_]
+        // [?][?][*][*]
+        // [X][*][_][_]
+        // [_][*][_][_]
+        IPoint[] botP2 = {points[1][2], points[1][3], points[2][1], points[3][1]};
+        IPoint[] hasP2 = {points[0][2]};
+        IPoint[] empP2 = {points[0][1], points[1][1]};
+        validateDangerMulti(botP2, hasP2, empP2, points[1][1]);
+        // [_][_][_][_]
+        // [*][*][?][?]
+        // [_][_][*][X]
+        // [_][_][*][_]
+        IPoint[] botP3 = {points[0][1], points[1][1], points[2][2], points[2][3]};
+        IPoint[] hasP3 = {points[3][2]};
+        IPoint[] empP3 = {points[2][1], points[3][1]};
+        validateDangerMulti(botP3, hasP3, empP3, points[2][1]);
+        // [_][_][_][_]
+        // [*][*][?][?]
+        // [_][_][X][*]
+        // [_][_][_][*]
+        IPoint[] botP4 = {points[0][1], points[1][1], points[3][2], points[3][3]};
+        IPoint[] hasP4 = {points[2][2]};
+        IPoint[] empP4 = {points[3][1], points[2][1]};
+        validateDangerMulti(botP4, hasP4, empP4, points[3][1]);
+        // double
+        // [?][_][_][_]
+        // [X][?][_][_]
+        // [_][*][*][_]
+        // [_][*][_][*]
+        IPoint[] botP5 = {points[1][2], points[1][3], points[2][2], points[3][3]};
+        IPoint[] hasP5 = {points[0][1]};
+        IPoint[] empP5 = {points[1][1], points[0][0]};
+        validateDangerMulti(botP5, hasP5, empP5, points[1][1]);
+        // [_][_][_][?]
+        // [_][_][?][X]
+        // [_][*][*][_]
+        // [*][_][*][_]
+        IPoint[] botP6 = {points[0][3], points[1][2], points[2][2], points[2][3]};
+        IPoint[] hasP6 = {points[3][1]};
+        IPoint[] empP6 = {points[2][1], points[3][0]};
+        validateDangerMulti(botP6, hasP6, empP6, points[2][1]);
+        // [_][_][_][_]
+        // [*][*][?][?]
+        // [_][*][X][X]
+        // [*][_][_][_]
+        IPoint[] botP7 = {points[0][1], points[1][1], points[0][3], points[1][2]};
+        IPoint[] hasP7 = {points[2][2], points[3][2]};
+        IPoint[] empP7 = {points[2][1], points[3][1]};
+        validateDangerMulti(botP7, hasP7, empP7, points[2][1]);
+        // [_][_][_][_]
+        // [?][?][*][*]
+        // [X][X][*][_]
+        // [_][_][_][*]
+        IPoint[] botP8 = {points[3][3], points[2][2], points[2][1], points[3][1]};
+        IPoint[] hasP8 = {points[0][2], points[1][2]};
+        IPoint[] empP8 = {points[0][1], points[1][1]};
+        validateDangerMulti(botP8, hasP8, empP8, points[1][1]);
+
+        // [_][_][_][_]
+        // [*][?][?][*]
+        // [_][*][X][_]
+        // [_][*][_][_]
+        IPoint[] botP9 = {points[0][1], points[3][1], points[1][2], points[1][3]};
+        IPoint[] hasP9 = {points[2][2]};
+        IPoint[] empP9 = {points[1][1], points[2][1]};
+        validateDangerMulti(botP9, hasP9, empP9, points[1][1]);
+        // [_][_][_][_]
+        // [*][?][?][*]
+        // [_][X][*][_]
+        // [_][_][*][_]
+        IPoint[] botP10 = {points[0][1], points[3][1], points[2][2], points[2][3]};
+        IPoint[] hasP10 = {points[1][2]};
+        IPoint[] empP10 = {points[2][1], points[1][1]};
+        validateDangerMulti(botP10, hasP10, empP10, points[2][1]);
+        // double crossover
+        // [_][_][_][_]
+        // [*][?][?][*]
+        // [_][*][X][_]
+        // [*][_][_][_]
+        IPoint[] botP11 = {points[0][1], points[3][1], points[1][2], points[0][3]};
+        IPoint[] hasP11 = {points[2][2]};
+        IPoint[] empP11 = {points[2][1], points[1][1]};
+        validateDangerMulti(botP11, hasP11, empP11, points[2][1]);
+        // [_][_][_][_]
+        // [*][?][?][*]
+        // [_][X][*][_]
+        // [_][_][_][*]
+        IPoint[] botP12 = {points[0][1], points[3][1], points[2][2], points[3][3]};
+        IPoint[] hasP12 = {points[1][2]};
+        IPoint[] empP12 = {points[1][1], points[2][1]};
+        validateDangerMulti(botP12, hasP12, empP12, points[1][1]);
+        // [_][_][_][_]
+        // [?][?][*][?]
+        // [*][*][_][X]
+        // [*][_][_][_]
+        IPoint[] botP13 = {points[0][3], points[0][2], points[1][2], points[2][1]};
+        IPoint[] hasP13 = {points[3][2]};
+        IPoint[] empP13 = {points[0][1], points[1][1], points[3][1]};
+        validateDangerMulti(botP13, hasP13, empP13, points[0][1]);
+        // [_][_][_][_]
+        // [?][*][?][?]
+        // [X][_][*][*]
+        // [_][_][_][*]
+        IPoint[] botP14 = {points[1][1], points[2][2], points[3][3], points[3][2]};
+        IPoint[] hasP14 = {points[0][2]};
+        IPoint[] empP14 = {points[0][1], points[2][1], points[3][1]};
+        validateDangerMulti(botP13, hasP13, empP13, points[3][1]);
+
+        // crossover
+        validateDangerCrossover(points[0][0], points[1][1], points[2][2], points[3][3]);
+        validateDangerCrossover(points[3][0], points[2][1], points[1][2], points[0][3]);
+
         // horizontal
         for (int j = 0; j < 4; ++j) {
             validateDangerHorizontal(points[0][j], points[1][j], points[2][j], points[3][j]);
@@ -45,69 +165,57 @@ class CheckDanger {
         for (int i = 0; i < 4; ++i) {
             validateDangerVertical(points[i][0], points[i][1], points[i][2], points[i][3]);
         }
-
-        // crossover
-        validateDangerCrossover(points[0][0], points[1][1], points[2][2], points[3][3]);
-        validateDangerCrossover(points[3][0], points[2][1], points[1][2], points[0][3]);
-
-        // double hoz & ver
-        validateDangerDoubleOnly(points[0][2], points[0][3], points[2][1], points[3][1], points[0][1], points[1][1]);
-        validateDangerDoubleOnly(points[1][2], points[1][3], points[2][1], points[3][1], points[1][1], points[0][1]);
-        validateDangerDoubleOnly(points[0][1], points[1][1], points[2][2], points[2][3], points[2][1], points[3][1]);
-        validateDangerDoubleOnly(points[0][1], points[1][1], points[3][2], points[3][3], points[3][1], points[2][1]);
-
-        // double
-        validateDangerDoubleOnly(points[1][2], points[1][3], points[2][2], points[3][3], points[1][1], points[0][0]);
-        validateDangerDoubleOnly(points[0][3], points[1][2], points[2][2], points[2][3], points[2][1], points[3][0]);
-
-        validateDangerDoubleDouble(points[0][1], points[1][1], points[0][3], points[1][2], points[2][1], points[3][1]);
-        validateDangerDoubleDouble(points[3][3], points[2][2], points[2][1], points[3][1], points[1][1], points[0][1]);
-
-        validateDangerDoubleOnly(points[0][1], points[3][1], points[1][2], points[1][3], points[1][1], points[2][1]);
-        validateDangerDoubleOnly(points[0][1], points[3][1], points[2][2], points[2][3], points[2][1], points[1][1]);
-        // double crossover
-        validateDangerDoubleCrossover(points[0][1], points[3][1], points[1][2], points[0][3], points[2][1], points[1][1], points[3][0]);
-        validateDangerDoubleCrossover(points[0][1], points[3][1], points[2][2], points[3][3], points[1][1], points[2][1], points[0][0]);
-
-        validateDangerHozCrossover(points[0][3], points[1][2], points[1][1], points[2][1], points[2][2]);
-        validateDangerHozCrossover(points[3][3], points[2][2], points[2][1], points[1][1], points[1][2]);
     }
 
     //check cho ngang
     private void validateDangerHorizontal(IPoint pos1, IPoint pos2, IPoint pos3, IPoint pos4) {
-        // [*][*][*][_]
-        if (iTables.isBotPoint(pos1.getPointId()) && iTables.isBotPoint(pos2.getPointId())
-                && iTables.isBotPoint(pos3.getPointId()) && iTables.isEmpty(pos4.getPointId())
-                && !pos4.isBelowEmpty()) {
-            pos4.setDanger(pos4.getDanger() + L10_DANGER);
+        // [*][_][*][_]
+        if (iTables.isBotPoint(pos1.getPointId()) && pos2.isEmpty()
+                && iTables.isBotPoint(pos3.getPointId()) && pos4.isEmpty()
+                && !pos2.isBelowEmpty() && !pos4.isBelowEmpty()) {
+            pos2.setDanger(pos2.getDanger() + LEVEL_DOUBLE_STEP);
+            pos4.setDanger(pos4.getDanger() + LEVEL_DOUBLE_STEP);
+        }
+        // [_][*][_][*]
+        else if (pos1.isEmpty() && iTables.isBotPoint(pos2.getPointId())
+                &&  pos3.isEmpty() && iTables.isBotPoint(pos4.getPointId())
+                && !pos1.isBelowEmpty() && !pos3.isBelowEmpty()) {
+            pos1.setDanger(pos2.getDanger() + LEVEL_DOUBLE_STEP);
+            pos3.setDanger(pos4.getDanger() + LEVEL_DOUBLE_STEP);
         }
         // [_][*][*][_]
         else if (iTables.isEmpty(pos1.getPointId()) && iTables.isBotPoint(pos2.getPointId())
                 && iTables.isBotPoint(pos3.getPointId()) && iTables.isEmpty(pos4.getPointId())) {
             if (!pos1.isBelowEmpty()) {
-                pos1.setDanger(pos1.getDanger() + L10_DANGER);
+                pos1.setDanger(pos1.getDanger() + LEVEL_DOUBLE_STEP);
             }
             if (!pos4.isBelowEmpty()) {
-                pos4.setDanger(pos4.getDanger() + L10_DANGER);
+                pos4.setDanger(pos4.getDanger() + LEVEL_DOUBLE_STEP);
             }
+        }
+        // [*][*][*][_]
+        else if (iTables.isBotPoint(pos1.getPointId()) && iTables.isBotPoint(pos2.getPointId())
+                && iTables.isBotPoint(pos3.getPointId()) && iTables.isEmpty(pos4.getPointId())
+                && !pos4.isBelowEmpty()) {
+            pos4.setDanger(pos4.getDanger() + LEVEL_DEAD);
         }
         // [_][*][*][*]
         else if (iTables.isEmpty(pos1.getPointId()) && iTables.isBotPoint(pos2.getPointId())
                 && iTables.isBotPoint(pos3.getPointId()) && iTables.isBotPoint(pos4.getPointId())
                 && !pos1.isBelowEmpty()) {
-            pos1.setDanger(pos1.getDanger() + L10_DANGER);
+            pos1.setDanger(pos1.getDanger() + LEVEL_DEAD);
         }
         // [*][*][_][*]
         else if (iTables.isBotPoint(pos1.getPointId()) && iTables.isBotPoint(pos2.getPointId())
                 && iTables.isEmpty(pos3.getPointId()) && iTables.isBotPoint(pos4.getPointId())
                 && !pos3.isBelowEmpty()) {
-            pos3.setDanger(pos3.getDanger() + L10_DANGER);
+            pos3.setDanger(pos3.getDanger() + LEVEL_DEAD);
         }
         // [*][_][*][*]
         else if (iTables.isBotPoint(pos1.getPointId()) && iTables.isEmpty(pos2.getPointId())
                 && iTables.isBotPoint(pos3.getPointId()) && iTables.isBotPoint(pos4.getPointId())
                 && !pos2.isBelowEmpty()) {
-            pos2.setDanger(pos2.getDanger() + L10_DANGER);
+            pos2.setDanger(pos2.getDanger() + LEVEL_DEAD);
         }
     }
 
@@ -115,7 +223,7 @@ class CheckDanger {
         // [_][*][*][*]
         if (iTables.isEmpty(pos1.getPointId()) && iTables.isBotPoint(pos2.getPointId())
                 && iTables.isBotPoint(pos3.getPointId()) && iTables.isBotPoint(pos4.getPointId())) {
-            pos1.setDanger(pos1.getDanger() + L10_DANGER);
+            pos1.setDanger(pos1.getDanger() + LEVEL_DEAD);
         }
     }
 
@@ -123,48 +231,19 @@ class CheckDanger {
         validateDangerHorizontal(pos1, pos2, pos3, pos4);
     }
 
-    private void validateDangerDoubleOnly(IPoint pos1, IPoint pos2, IPoint pos3, IPoint pos4, IPoint pos5, IPoint pos6) {
-        if (pos5.isActive() && pos6.isActive() && !pos6.isBelowEmpty()) {
-            if (iTables.isBotPoint(pos1.getPointId()) && iTables.isBotPoint(pos2.getPointId())
-                    && iTables.isBotPoint(pos3.getPointId()) && iTables.isBotPoint(pos4.getPointId())) {
-                pos5.setDanger(pos5.getDanger() + L06_DANGER);
-            }
-        }
-    }
-    
-    private void validateDangerDoubleDouble(IPoint pos1, IPoint pos2, IPoint pos3, IPoint pos4, IPoint pos5, IPoint pos6) {
-        if (pos5.isActive() && pos6.isActive() && !pos5.isBelowEmpty() && !pos6.isBelowEmpty()) {
-            if (iTables.isBotPoint(pos1.getPointId()) && iTables.isBotPoint(pos2.getPointId())
-                    && iTables.isBotPoint(pos3.getPointId()) && iTables.isBotPoint(pos4.getPointId())) {
-                pos5.setDanger(pos5.getDanger() + L06_DANGER);
-            }
-        }
-    }
-
-    public void validateDangerDoubleCrossover(IPoint pos1, IPoint pos2, IPoint pos3, IPoint pos4,
-                                              IPoint pos5, IPoint pos6, IPoint pos7) {
-        if (pos5.isActive() && pos6.isActive() && pos7.isActive() && !pos5.isBelowEmpty()) {
-            if (iTables.isBotPoint(pos1.getPointId()) && iTables.isBotPoint(pos2.getPointId())
-                    && iTables.isBotPoint(pos3.getPointId()) && iTables.isBotPoint(pos4.getPointId())) {
-                pos5.setDanger(pos5.getDanger() + L06_DANGER);
-            }
-        }
-    }
-
-    private void validateDangerHozCrossover(IPoint pos1, IPoint pos2, IPoint pos3, IPoint pos4, IPoint pos5) {
-        if (pos4.isActive() && !pos5.isActive() && pos4.isRightEmpty() && !pos5.isRightEmpty()
-                && pos3.isLeftEmpty() && !pos2.isLeftEmpty()) {
-            if (iTables.isBotPoint(pos1.getPointId()) && iTables.isBotPoint(pos2.getPointId()) && iTables.isBotPoint(pos3.getPointId())) {
-                pos4.setDanger(pos4.getDanger() + L06_DANGER);
-            }
+    private void validateDangerMulti(IPoint[] botPoints, IPoint[] hasPoints, IPoint[] emptyPoints, IPoint dangerPoint) {
+        for (IPoint point : botPoints) {
+            if (!iTables.isBotPoint(point.getPointId())) return;
         }
 
-        if (pos4.isActive() && !pos5.isActive() && pos4.isLeftEmpty() && !pos5.isLeftEmpty()
-                && pos3.isRightEmpty() && !pos2.isRightEmpty()) {
-            if (iTables.isBotPoint(pos1.getPointId()) && iTables.isBotPoint(pos2.getPointId()) && iTables.isBotPoint(pos3.getPointId())) {
-                pos4.setDanger(pos4.getDanger() + L06_DANGER);
-            }
+        for (IPoint point : hasPoints) {
+            if (point.isEmpty()) return;
         }
+
+        for (IPoint point : emptyPoints) {
+            if (!point.isEmpty()) return;
+        }
+        dangerPoint.setDanger(LEVEL_DOUBLE_STEP);
     }
 
     private IPoint findMaxDanger() {
