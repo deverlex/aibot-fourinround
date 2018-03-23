@@ -6,7 +6,7 @@ import java.util.Random;
 
 //idea: kiem tra tat cac cac vi tri trong co kha nang nguy hiem
 // tien hanh danh trong so
-class CheckDanger {
+class LearnLogic {
 
     private final static int LEVEL_DEAD = 50;
     private final static int LEVEL_DOUBLE_STEP = 15;
@@ -14,7 +14,7 @@ class CheckDanger {
 
     private ITables iTables;
 
-    public CheckDanger(ITables iTables) {
+    public LearnLogic(ITables iTables) {
         this.iTables = iTables;
     }
 

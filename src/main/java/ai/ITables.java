@@ -8,12 +8,12 @@ public class ITables {
     private String myId;
     private String botId;
 
-    private CheckDanger checkDanger;
+    private LearnLogic learnLogic;
 
     private static ITables iTables;
 
     private ITables() {
-        checkDanger = new CheckDanger(this);
+        learnLogic = new LearnLogic(this);
     }
 
     public ITables setSize(int width, int height) {
@@ -34,7 +34,7 @@ public class ITables {
     }
 
     public IPoint findBestPoint() {
-        return checkDanger.makeRunFind();
+        return learnLogic.makeRunFind();
     }
 
     public int getWidth() {
