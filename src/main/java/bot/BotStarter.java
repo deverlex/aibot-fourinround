@@ -59,9 +59,8 @@ public class BotStarter {
         //so sanh 2 ben, minh co co hoi ngon hon thi danh
         if (iPointBot.getDanger() > iPointMy.getDanger()) {
             return iPointBot.getX();
-        } else {
-            return iPointMy.getX();
         }
+        return iPointMy.getX();
     }
 
     public static void main(String[] args) {

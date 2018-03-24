@@ -8,8 +8,8 @@ import java.util.Random;
 // tien hanh danh trong so
 class LearnLogic {
 
-    private final static int LEVEL_DEAD = 50;
-    private final static int LEVEL_DOUBLE_STEP = 15;
+    private final static int LEVEL_DEAD = 12;
+    private final static int LEVEL_DOUBLE_STEP = 7;
     private final static int LEVEL_MAYBE = 2;
 
     private ITables iTables;
@@ -151,7 +151,7 @@ class LearnLogic {
         IPoint[] botP14 = {points[1][1], points[2][2], points[3][3], points[3][2]};
         IPoint[] hasP14 = {points[0][2]};
         IPoint[] empP14 = {points[0][1], points[2][1], points[3][1]};
-        validateDangerMulti(botP13, hasP13, empP13, points[3][1]);
+        validateDangerMulti(botP14, hasP14, empP14, points[3][1]);
 
         // crossover
         validateDangerCrossover(points[0][0], points[1][1], points[2][2], points[3][3]);
@@ -170,50 +170,54 @@ class LearnLogic {
     //check cho ngang
     private void validateDangerHorizontal(IPoint pos1, IPoint pos2, IPoint pos3, IPoint pos4) {
         // [*][_][*][_]
-        if (iTables.isBotPoint(pos1.getPointId()) && pos2.isEmpty()
-                && iTables.isBotPoint(pos3.getPointId()) && pos4.isEmpty()
+        if (iTables.isBot(pos1) && pos2.isEmpty()
+                && iTables.isBot(pos3) && pos4.isEmpty()
                 && !pos2.isBelowEmpty() && !pos4.isBelowEmpty()) {
-            pos2.setDanger(pos2.getDanger() + LEVEL_DOUBLE_STEP);
-            pos4.setDanger(pos4.getDanger() + LEVEL_DOUBLE_STEP);
+            if (pos1.isLeftDanger()) {
+                pos2.setDanger(pos2.getDanger() + LEVEL_DEAD);
+            } else {
+                pos2.setDanger(pos2.getDanger() + LEVEL_MAYBE);
+            }
         }
         // [_][*][_][*]
-        else if (pos1.isEmpty() && iTables.isBotPoint(pos2.getPointId())
-                &&  pos3.isEmpty() && iTables.isBotPoint(pos4.getPointId())
+        if (pos1.isEmpty() && iTables.isBot(pos2)
+                &&  pos3.isEmpty() && iTables.isBot(pos4)
                 && !pos1.isBelowEmpty() && !pos3.isBelowEmpty()) {
-            pos1.setDanger(pos2.getDanger() + LEVEL_DOUBLE_STEP);
-            pos3.setDanger(pos4.getDanger() + LEVEL_DOUBLE_STEP);
+            if (pos4.isRightDanger()) {
+                pos3.setDanger(pos3.getDanger() + LEVEL_DEAD);
+            } else {
+                pos3.setDanger(pos3.getDanger() + LEVEL_MAYBE);
+            }
         }
         // [_][*][*][_]
-        else if (iTables.isEmpty(pos1.getPointId()) && iTables.isBotPoint(pos2.getPointId())
-                && iTables.isBotPoint(pos3.getPointId()) && iTables.isEmpty(pos4.getPointId())) {
-            if (!pos1.isBelowEmpty()) {
-                pos1.setDanger(pos1.getDanger() + LEVEL_DOUBLE_STEP);
-            }
-            if (!pos4.isBelowEmpty()) {
-                pos4.setDanger(pos4.getDanger() + LEVEL_DOUBLE_STEP);
+        if (pos1.isEmpty() && iTables.isBot(pos2)
+                && iTables.isBot(pos3) && pos4.isEmpty()) {
+            if (!pos1.isBelowEmpty() && !pos4.isBelowEmpty()) {
+                pos1.setDanger(pos1.getDanger() + LEVEL_DEAD);
+                pos4.setDanger(pos4.getDanger() + LEVEL_DEAD);
             }
         }
         // [*][*][*][_]
-        else if (iTables.isBotPoint(pos1.getPointId()) && iTables.isBotPoint(pos2.getPointId())
-                && iTables.isBotPoint(pos3.getPointId()) && iTables.isEmpty(pos4.getPointId())
+        if (iTables.isBot(pos1) && iTables.isBot(pos2)
+                && iTables.isBot(pos3) && pos4.isEmpty()
                 && !pos4.isBelowEmpty()) {
             pos4.setDanger(pos4.getDanger() + LEVEL_DEAD);
         }
         // [_][*][*][*]
-        else if (iTables.isEmpty(pos1.getPointId()) && iTables.isBotPoint(pos2.getPointId())
-                && iTables.isBotPoint(pos3.getPointId()) && iTables.isBotPoint(pos4.getPointId())
+        if (pos1.isEmpty() && iTables.isBot(pos2)
+                && iTables.isBot(pos3) && iTables.isBot(pos4)
                 && !pos1.isBelowEmpty()) {
             pos1.setDanger(pos1.getDanger() + LEVEL_DEAD);
         }
         // [*][*][_][*]
-        else if (iTables.isBotPoint(pos1.getPointId()) && iTables.isBotPoint(pos2.getPointId())
-                && iTables.isEmpty(pos3.getPointId()) && iTables.isBotPoint(pos4.getPointId())
+        if (iTables.isBot(pos1) && iTables.isBot(pos2)
+                && pos3.isEmpty() && iTables.isBot(pos4)
                 && !pos3.isBelowEmpty()) {
             pos3.setDanger(pos3.getDanger() + LEVEL_DEAD);
         }
         // [*][_][*][*]
-        else if (iTables.isBotPoint(pos1.getPointId()) && iTables.isEmpty(pos2.getPointId())
-                && iTables.isBotPoint(pos3.getPointId()) && iTables.isBotPoint(pos4.getPointId())
+        if (iTables.isBot(pos1) && pos2.isEmpty()
+                && iTables.isBot(pos3) && iTables.isBot(pos4)
                 && !pos2.isBelowEmpty()) {
             pos2.setDanger(pos2.getDanger() + LEVEL_DEAD);
         }
@@ -221,8 +225,8 @@ class LearnLogic {
 
     private void validateDangerVertical(IPoint pos1, IPoint pos2, IPoint pos3, IPoint pos4) {
         // [_][*][*][*]
-        if (iTables.isEmpty(pos1.getPointId()) && iTables.isBotPoint(pos2.getPointId())
-                && iTables.isBotPoint(pos3.getPointId()) && iTables.isBotPoint(pos4.getPointId())) {
+        if (pos1.isEmpty() && iTables.isBot(pos2)
+                && iTables.isBot(pos3) && iTables.isBot(pos4)) {
             pos1.setDanger(pos1.getDanger() + LEVEL_DEAD);
         }
     }
@@ -233,7 +237,7 @@ class LearnLogic {
 
     private void validateDangerMulti(IPoint[] botPoints, IPoint[] hasPoints, IPoint[] emptyPoints, IPoint dangerPoint) {
         for (IPoint point : botPoints) {
-            if (!iTables.isBotPoint(point.getPointId())) return;
+            if (!iTables.isBot(point)) return;
         }
 
         for (IPoint point : hasPoints) {
@@ -243,7 +247,7 @@ class LearnLogic {
         for (IPoint point : emptyPoints) {
             if (!point.isEmpty()) return;
         }
-        dangerPoint.setDanger(LEVEL_DOUBLE_STEP);
+        dangerPoint.setDanger(dangerPoint.getDanger() + LEVEL_DOUBLE_STEP);
     }
 
     private IPoint findMaxDanger() {

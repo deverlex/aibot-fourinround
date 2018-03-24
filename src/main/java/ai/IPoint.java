@@ -59,7 +59,7 @@ public class IPoint {
 
     public boolean isLeftEmpty() {
         try {
-            return iTables.getPoints()[this.x - 1][this.y].pointId.equals(".");
+            return iTables.getPoints()[x - 1][y].pointId.equals(".");
         } catch (Exception e) {
             return false;
         }
@@ -67,9 +67,26 @@ public class IPoint {
 
     public boolean isRightEmpty() {
         try {
-            return iTables.getPoints()[this.x + 1][this.y].pointId.equals(".");
+            return iTables.getPoints()[x + 1][y].pointId.equals(".");
         } catch (Exception e) {
             return false;
         }
     }
+
+    public boolean isLeftDanger() {
+        try {
+            return isLeftEmpty() && !iTables.getPoints()[x - 1][y].isBelowEmpty();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean isRightDanger() {
+        try {
+            return isRightEmpty() && !iTables.getPoints()[x + 1][y].isBelowEmpty();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 }

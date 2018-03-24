@@ -80,27 +80,17 @@ public class ITables {
     }
 
     /**** Check point ***/
-    public boolean isBotPoint(int i, int j) {
-        return isBotPoint(points[i][j].getPointId());
-    }
-
-    public boolean isMyPoint(int i, int j) {
-        return isMyPoint(points[i][j].getPointId());
-    }
 
     public boolean isEmpty(int i, int j) {
-        return isEmpty(points[i][j].getPointId());
+        return points[i][j].isEmpty();
     }
 
-    public boolean isBotPoint(String pos) {
-        return !pos.equals(".") && !pos.equals(myId);
+    public boolean isBot(IPoint iPoint) {
+        return !iPoint.getPointId().equals(".") && !iPoint.getPointId().equals(myId);
     }
 
-    public boolean isMyPoint(String pos) {
-        return !pos.equals(".") && pos.equals(myId);
+    public boolean isMe(IPoint iPoint) {
+        return !iPoint.getPointId().equals(".") && iPoint.getPointId().equals(myId);
     }
 
-    public boolean isEmpty(String pos) {
-        return pos.equals(".");
-    }
 }
