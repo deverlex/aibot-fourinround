@@ -1,6 +1,7 @@
 package ai;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -12,13 +13,16 @@ class Logic {
     public final static int LEVEL_DOUBLE_STEP = 7;
     public final static int LEVEL_MAYBE = 2;
 
+    private List<IPoint> dangerPoints;
     private ITables iTables;
 
     public Logic(ITables iTables) {
+        this.dangerPoints = new ArrayList<>();
         this.iTables = iTables;
     }
 
-    public IPoint makeRunFind() {
+    public List<IPoint> makeRunFind() {
+        dangerPoints.clear();
         IPoint[][] points = new IPoint[4][4];
         for (int i = 0; i < iTables.getWidth() - 3; ++i) {
             for (int j = 0; j <  iTables.getHeight() - 3; ++j) {
@@ -32,7 +36,16 @@ class Logic {
             }
         }
 
-        return findMaxDanger();
+        for (int i = 0; i < iTables.getWidth(); ++i) {
+            for (int j = 0; j < iTables.getHeight(); ++j) {
+                if (iTables.getPoints()[i][j].getDanger() >= LEVEL_MAYBE) {
+                    dangerPoints.add(iTables.getPoints()[i][j]);
+                }
+            }
+        }
+
+        dangerPoints.sort(new CompareIPoint());
+        return dangerPoints;
     }
 
     /// IPoint[4][4]
@@ -121,28 +134,31 @@ class Logic {
         validateDangerHorizontal(pos1, pos2, pos3, pos4);
     }
 
-    private IPoint findMaxDanger() {
-        IPoint iPoint = findEmptyPoint();
-        for (int i = 0; i < iTables.getWidth(); ++i) {
-            for (int j = 0; j < iTables.getHeight(); ++j) {
-                if (iTables.getPoints()[i][j].getDanger() > iPoint.getDanger()) {
-                    iPoint = iTables.getPoints()[i][j];
+    public boolean isGameOver() {
+        IPoint[][] points = iTables.getPoints();
+        for (int i = 0; i < iTables.getWidth() - 4; ++i) {
+            for (int j = 0; j < iTables.getHeight() - 4; ++j) {
+                if (isFourInRow(points[i][j], points[i + 1][j], points[i + 2][j], points[i + 3][j])) {
+                    return true;
                 }
+                if (isFourInRow(points[i][j], points[i][j + 1], points[i][j + 2], points[i][j + 3])) {
+                    return true;
+                }
+                if (isFourInRow(points[i][j], points[i + 1][j + 1], points[i + 2][j + 2], points[i + 3][j + 3])) {
+                    return true;
+                }
+                if (isFourInRow(points[i][j + 3], points[i + 1][j + 2], points[i + 2][j + 1], points[i + 3][j])) {
+                    return true;
+                }
+
             }
         }
-        return iPoint;
+        return false;
     }
 
-    private IPoint findEmptyPoint() {
-        List<IPoint> empties = new ArrayList<>();
-        for (int i = 0; i < iTables.getWidth(); ++i) {
-            for (int j = 0; j < iTables.getHeight(); ++j) {
-                if (iTables.isEmpty(i, j)) {
-                    empties.add(iTables.getPoints()[i][j]);
-                }
-            }
-        }
-        int random = new Random().nextInt(empties.size());
-        return empties.get(random);
+    private boolean isFourInRow(IPoint p1, IPoint p2, IPoint p3, IPoint p4) {
+        if (iTables.isBot(p1) && iTables.isBot(p2) && iTables.isBot(p3) && iTables.isBot(p4)) return true;
+        return false;
     }
+    
 }

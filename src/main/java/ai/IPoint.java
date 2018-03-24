@@ -73,6 +73,18 @@ public class IPoint {
         }
     }
 
+    public boolean isTopEmpty() {
+        try {
+            return iTables.getPoints()[x][y - 1].getPointId().equals(".");
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean isCanHit() {
+        return isTopEmpty() && !isBelowEmpty();
+    }
+
     public boolean isLeftDanger() {
         try {
             return isLeftEmpty() && !iTables.getPoints()[x - 1][y].isBelowEmpty();

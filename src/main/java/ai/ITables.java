@@ -1,5 +1,8 @@
 package ai;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ITables {
 
     private int width;
@@ -8,11 +11,14 @@ public class ITables {
     private String myId;
     private String botId;
 
+    private List<IPoint> canHitPoints;
+
     private Logic logic;
 
     private static ITables iTables;
 
     private ITables() {
+        canHitPoints = new ArrayList<>();
         logic = new Logic(this);
     }
 
@@ -33,8 +39,8 @@ public class ITables {
         return iTables;
     }
 
-    public IPoint findBestPoint() {
-        return logic.makeRunFind();
+    public boolean isGameOver() {
+        return logic.isGameOver();
     }
 
     public int getWidth() {
@@ -62,6 +68,7 @@ public class ITables {
     }
 
     public ITables updateTable(String[][] fields) {
+        canHitPoints.clear();
         for (int i = 0; i < width; ++i) {
             for (int j = 0; j < height; ++j) {
                 IPoint iPoint = new IPoint(this, i, j);
@@ -69,6 +76,9 @@ public class ITables {
                 points[i][j] = iPoint;
                 if (!iPoint.getPointId().equals(".") && !iPoint.getPointId().equals(myId)) {
                     botId = iPoint.getPointId();
+                }
+                if (points[i][j].isCanHit()) {
+                    canHitPoints.add(points[i][j]);
                 }
             }
         }
@@ -87,5 +97,21 @@ public class ITables {
 
     public boolean isBot(IPoint iPoint) {
         return !iPoint.getPointId().equals(".") && !iPoint.getPointId().equals(myId);
+    }
+
+    public String getMyId() {
+        return myId;
+    }
+
+    public String getBotId() {
+        return botId;
+    }
+
+    public List<IPoint> getCanHitPoints() {
+        return canHitPoints;
+    }
+
+    public List<IPoint> getDangerPoints() {
+        return logic.makeRunFind();
     }
 }
