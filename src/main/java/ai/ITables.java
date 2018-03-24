@@ -88,9 +88,4 @@ public class ITables {
     public boolean isBot(IPoint iPoint) {
         return !iPoint.getPointId().equals(".") && !iPoint.getPointId().equals(myId);
     }
-
-    public boolean isMe(IPoint iPoint) {
-        return !iPoint.getPointId().equals(".") && iPoint.getPointId().equals(myId);
-    }
-
 }
