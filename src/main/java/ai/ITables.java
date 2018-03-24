@@ -8,12 +8,12 @@ public class ITables {
     private String myId;
     private String botId;
 
-    private LearnLogic learnLogic;
+    private Logic logic;
 
     private static ITables iTables;
 
     private ITables() {
-        learnLogic = new LearnLogic(this);
+        logic = new Logic(this);
     }
 
     public ITables setSize(int width, int height) {
@@ -34,7 +34,7 @@ public class ITables {
     }
 
     public IPoint findBestPoint() {
-        return learnLogic.makeRunFind();
+        return logic.makeRunFind();
     }
 
     public int getWidth() {

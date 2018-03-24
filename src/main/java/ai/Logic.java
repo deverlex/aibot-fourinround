@@ -6,7 +6,7 @@ import java.util.Random;
 
 //idea: kiem tra tat cac cac vi tri trong co kha nang nguy hiem
 // tien hanh danh trong so
-class LearnLogic {
+class Logic {
 
     private final static int LEVEL_DEAD = 12;
     private final static int LEVEL_DOUBLE_STEP = 7;
@@ -14,7 +14,7 @@ class LearnLogic {
 
     private ITables iTables;
 
-    public LearnLogic(ITables iTables) {
+    public Logic(ITables iTables) {
         this.iTables = iTables;
     }
 
@@ -152,6 +152,26 @@ class LearnLogic {
         IPoint[] hasP14 = {points[0][2]};
         IPoint[] empP14 = {points[0][1], points[2][1], points[3][1]};
         validateDangerMulti(botP14, hasP14, empP14, points[3][1]);
+        // [*][_][_][_]
+        // [*][*][?][_]
+        // [_][_][?][_]
+        // [_][_][*][?]
+
+        // [_][_][_][*]
+        // [_][?][*][*]
+        // [_][?][_][_]
+        // [?][*][_][_]
+
+        // [_][_][_][?]
+        // [_][?][?][*]
+        // [_][*][X][_]
+        // [*][*][_][_]
+
+        // [?][_][_][_]
+        // [*][?][?][_]
+        // [_][X][*][_]
+        // [_][_][*][*]
+
 
         // crossover
         validateDangerCrossover(points[0][0], points[1][1], points[2][2], points[3][3]);
