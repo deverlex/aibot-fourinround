@@ -40,7 +40,11 @@ public class ITables {
     }
 
     public boolean isGameOver() {
-        return logic.isGameOver();
+        return logic.isGameState(botId);
+    }
+
+    public boolean isGameWin() {
+        return logic.isGameState(myId);
     }
 
     public int getWidth() {
@@ -68,7 +72,6 @@ public class ITables {
     }
 
     public ITables updateTable(String[][] fields) {
-        canHitPoints.clear();
         for (int i = 0; i < width; ++i) {
             for (int j = 0; j < height; ++j) {
                 IPoint iPoint = new IPoint(this, i, j);
@@ -76,9 +79,6 @@ public class ITables {
                 points[i][j] = iPoint;
                 if (!iPoint.getPointId().equals(".") && !iPoint.getPointId().equals(myId)) {
                     botId = iPoint.getPointId();
-                }
-                if (points[i][j].isCanHit()) {
-                    canHitPoints.add(points[i][j]);
                 }
             }
         }
@@ -108,10 +108,22 @@ public class ITables {
     }
 
     public List<IPoint> getCanHitPoints() {
+        canHitPoints.clear();
+        for (int i = 0; i < width; ++i) {
+            for (int j = 0; j < height; ++j) {
+                if (points[i][j].isCanHit()) {
+                    canHitPoints.add(points[i][j]);
+                }
+            }
+        }
         return canHitPoints;
     }
 
     public List<IPoint> getDangerPoints() {
         return logic.makeRunFind();
+    }
+
+    public List<IPoint> getHitPoints() {
+        return logic.makeRunHit();
     }
 }

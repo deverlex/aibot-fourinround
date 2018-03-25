@@ -1,9 +1,6 @@
 package ai;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 //idea: kiem tra tat cac cac vi tri trong co kha nang nguy hiem
 // tien hanh danh trong so
@@ -44,8 +41,27 @@ class Logic {
             }
         }
 
-        dangerPoints.sort(new CompareIPoint());
+        if (dangerPoints.size() > 1) {
+            dangerPoints.sort(new CompareIPoint());
+        }
         return dangerPoints;
+    }
+
+    public List<IPoint> makeRunHit() {
+        List<IPoint> canHitPoints = iTables.getCanHitPoints();
+        iTables.swapIds();
+        for (int i = 0; i < canHitPoints.size(); ++i) {
+            canHitPoints.get(i).setPointId(iTables.getMyId());
+            List<IPoint> dangerPoints = makeRunFind();
+            if (dangerPoints.size() > 0) {
+                iTables.swapIds();
+                canHitPoints.get(i).setPointId(".");
+                return dangerPoints;
+            }
+            canHitPoints.get(i).setPointId(".");
+        }
+        iTables.swapIds();
+        return canHitPoints;
     }
 
     /// IPoint[4][4]
@@ -134,20 +150,20 @@ class Logic {
         validateDangerHorizontal(pos1, pos2, pos3, pos4);
     }
 
-    public boolean isGameOver() {
+    public boolean isGameState(String pointId) {
         IPoint[][] points = iTables.getPoints();
         for (int i = 0; i < iTables.getWidth() - 4; ++i) {
             for (int j = 0; j < iTables.getHeight() - 4; ++j) {
-                if (isFourInRow(points[i][j], points[i + 1][j], points[i + 2][j], points[i + 3][j])) {
+                if (isFourInRow(pointId, points[i][j], points[i + 1][j], points[i + 2][j], points[i + 3][j])) {
                     return true;
                 }
-                if (isFourInRow(points[i][j], points[i][j + 1], points[i][j + 2], points[i][j + 3])) {
+                if (isFourInRow(pointId, points[i][j], points[i][j + 1], points[i][j + 2], points[i][j + 3])) {
                     return true;
                 }
-                if (isFourInRow(points[i][j], points[i + 1][j + 1], points[i + 2][j + 2], points[i + 3][j + 3])) {
+                if (isFourInRow(pointId, points[i][j], points[i + 1][j + 1], points[i + 2][j + 2], points[i + 3][j + 3])) {
                     return true;
                 }
-                if (isFourInRow(points[i][j + 3], points[i + 1][j + 2], points[i + 2][j + 1], points[i + 3][j])) {
+                if (isFourInRow(pointId, points[i][j + 3], points[i + 1][j + 2], points[i + 2][j + 1], points[i + 3][j])) {
                     return true;
                 }
 
@@ -156,8 +172,9 @@ class Logic {
         return false;
     }
 
-    private boolean isFourInRow(IPoint p1, IPoint p2, IPoint p3, IPoint p4) {
-        if (iTables.isBot(p1) && iTables.isBot(p2) && iTables.isBot(p3) && iTables.isBot(p4)) return true;
+    private boolean isFourInRow(String pointId, IPoint p1, IPoint p2, IPoint p3, IPoint p4) {
+        if (p1.getPointId().equals(pointId) && p2.getPointId().equals(pointId)
+                && p3.getPointId().equals(pointId) && p4.getPointId().equals(pointId)) return true;
         return false;
     }
     

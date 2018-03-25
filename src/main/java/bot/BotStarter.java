@@ -20,8 +20,14 @@
 package bot;
 
 import ai.IPoint;
+import ai.IProcessing;
 import ai.ITables;
 import field.Field;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * bot.BotStarter
@@ -42,25 +48,36 @@ public class BotStarter {
 
     public int doMove(BotState state) {
         Field field = state.getField();
+        return IProcessing.getInstance().doProcessing(field);
 
-        // make intelligent table
-        ITables iTables = ITables.build()
-                .setSize(field.getWidth(), field.getHeight())
-                .setMyId(String.valueOf(field.getMyId()))
-                .updateTable(field.getField());
+//        // make intelligent table
+//        ITables iTables = ITables.build()
+//                .setSize(field.getWidth(), field.getHeight())
+//                .setMyId(String.valueOf(field.getMyId()))
+//                .updateTable(field.getField());
+//
+//        // nuoc nguy hiem nhat cua doi thu
+//        List<IPoint> myIPoints = new ArrayList<>();
+//        myIPoints.addAll(iTables.getDangerPoints());
+//
+//        iTables.swapIds();
+//        // tim nguy hiem nhay cua minh
+//        List<IPoint> botIPoints  = new ArrayList<>();
+//        botIPoints.addAll(iTables.getDangerPoints());
+//
+//        if (myIPoints.size() > 0 && botIPoints.size() > 0) {
+//            if (myIPoints.get(0).getDanger() > botIPoints.get(0).getDanger()) {
+//                return myIPoints.get(0).getX();
+//            }
+//            return botIPoints.get(0).getX();
+//        } else if (myIPoints.size() > 0) {
+//            return myIPoints.get(0).getX();
+//        } else if (botIPoints.size() > 0) {
+//            return botIPoints.get(0).getX();
+//        }
+//
+//        return iTables.getCanHitPoints().get(iTables.getCanHitPoints().size() / 2).getX();
 
-        // nuoc nguy hiem nhat cua doi thu
-        IPoint iPointMy = iTables.findBestPoint();
-
-        iTables.swapIds();
-        // tim nguy hiem nhay cua minh
-        IPoint iPointBot = iTables.findBestPoint();
-
-        //so sanh 2 ben, minh co co hoi ngon hon thi danh
-        if (iPointBot.getDanger() > iPointMy.getDanger()) {
-            return iPointBot.getX();
-        }
-        return iPointMy.getX();
     }
 
     public static void main(String[] args) {
